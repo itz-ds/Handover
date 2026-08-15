@@ -1,0 +1,155 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+
+
+
+<!-- <div class="d-flex flex-column w-100 gap-5 pt-5">
+    <h2 class="mb-3 fw-bold"><i class="{{category.icon}}"></i> {{category.name}}</h2>
+    <div class="d-flex flex-column gap-3 mb-3">
+
+        {% for service in services %}
+        <div class="row gap-3 pb-2 border-bottom">
+            <div class="img-container col-3" style="width: 200px; height: 200px;">
+                <img src="{{service.image}}" alt="Service Image" class=" h-100">
+            </div>
+            <div class="col-6 d-flex flex-column justify-content-center">
+                <span class="text-nowrap h4">{{service.name}}</span>
+                <span class="service-rating text-success mb-2">
+                    <i class="bi bi-star-fill fs-sm text-success"></i>
+                    <span style="font-size: 16px;">{{service.rating}}</span>
+                    <a href="#" style="font-size: 16px;">({{service.total_reviews}} reviews)</a>
+                </span>
+                <span class="service-price " style="font-size: 16px;">
+                    {% if service.on_discount %}
+                    <div class="d-flex gap-2 mb-2">
+
+                        <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span><span> • {{service.duration_text}}</span>
+                    </div>
+                    <span class="text-success">You save ₹{{service.saved_price}}</span>
+
+                    {% else %}
+
+                    <span>₹{{service.price}}</span><span> • {{service.duration_text}}</span>
+
+                    {% endif %}   
+                </span>
+                <hr>
+                <span class="text-muted">{{service.description | truncatewords:20 }}</span>
+            </div>
+            <div class="ms-auto mt-auto pb-3 d-flex flex-column gap-3 col-2">
+
+                <a href="{% url 'service' id=service.id %}" class="btn btn-warning btn-outline-dark px-4 ">View details</a>
+                {% csrf_token %}
+                {% if service in in_cart %}
+                <a href="{% url 'cart' %}" class="btn btn-warning btn-outline-dark text-nowrap px-4" type="button"><i class="bi bi-minecart-loaded"></i> Cart</a>
+                {% else %}
+                <button class="btn btn-warning btn-outline-dark text-nowrap px-4 add-cart" type="button" data-id="{{service.id}}"><i class="bi bi-minecart"></i> Add</button>
+                {% endif %}
+            </div>
+            
+        </div>
+        
+        {% endfor %}
+    </div>
+
+    <div class="">
+        {% for category in other_categories %}
+        <a href="{% url 'category' id=category.id %}" class="mb-2 px-4 btn text-nowrap btn-dark btn-outline-warning rounded-pill">{{category.name}}</a>
+        {% endfor %}
+        
+    </div>
+</div> -->
+<div class="py-5">
+
+    <div class="d-flex flex-column flex-md-row gap-3 border-bottom mb-2">
+        <div class="img-container" >
+            <img src="{{service.image}}" alt="Service Image" class="h-100">
+        </div>
+        <div class="d-flex flex-column">
+            <h2 class="">{{service.name}}</h2>
+            <span class="service-rating text-success mb-2">
+                <i class="bi bi-star-fill fs-sm text-success"></i>
+                <span style="font-size: 16px;">{{service.rating}}</span>
+                <a href="#" style="font-size: 16px;">({{service.total_reviews}} reviews)</a>
+            </span>
+            <div class="mb-2">
+
+                <span class="bg-warning border border-dark rounded px-1 mb-2">{{service.booking_count}}+</span> <span> bookings</span>
+            </div>
+            <span class="service-price" style="font-size: 16px;">
+                {% if service.on_discount %}
+                <div class="d-flex gap-2">
+    
+                    <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span><span> • {{service.duration_text}}</span>
+                </div>
+                
+                <span class="text-success">You save ₹{{service.saved_price}}</span>
+    
+                {% else %}
+    
+                <span>₹{{service.price}}</span><span> • {{service.duration_text}}</span>
+    
+                {% endif %}   
+            </span>
+            <div>
+                <span class="">Category: </span>
+                <a href="{% url 'category' id=service.category.id %}" class="fw-bolder text-decoration-none text-dark">{{service.category.name}}</a>
+            </div>
+            <div class="mt-auto pb-3">
+
+                {% csrf_token %}
+                {% if service in in_cart %}
+                <a href="{% url 'cart' %}" class="btn btn-warning btn-outline-dark text-nowrap px-4" style="width: 150px;" type="button"><i class="bi bi-minecart-loaded"></i> Cart</a>
+                {% else %}
+                <button class="btn btn-warning btn-outline-dark text-nowrap px-4 add-cart" style="width: 150px;" type="button" data-id="{{service.id}}"><i class="bi bi-minecart"></i> Add</button>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+    <div class="py-3">
+
+        <span class="fw-bold">Description: </span><span>{{service.description}}</span>
+    </div>
+
+</div>
+<div class="mb-3">
+    <h2>Other Services</h2>
+    <div class="py-3 d-flex align-items-center overflow-hidden">
+        {% for service in other_services_in_category %}
+        <a href="{% url 'service' id=service.id  %}" class="home-card">
+            <div class="img-container">
+                <img src="{{service.image}}" alt="" class="h-100 d-block rounded">
+            </div>
+            <div class="d-flex flex-column gap-1">
+                <span class="service-name">{{service.name}}</span>
+                <span class="service-rating"><i class="bi bi-star-fill fs-sm"></i> {{service.rating}}</span>
+                <span class="service-price d-flex gap-2">
+                {% if service.on_discount %}
+                <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span>
+                {% else %}
+                <span>₹{{service.price}}</span>
+                {% endif %}   
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<div class="mb-3">
+    <h2>Other Categories</h2>
+    <div class="py-3 d-flex align-items-center gap-3 home-services overflow-hidden">
+        {% for category in other_categories %}
+        <div class=" ">
+            <a href="{% url 'category' id=category.id %}" class=" category-panel rounded py-3">
+                <i class="display-6 d-block text-center {{category.icon}}"></i>
+                <p class="text-center text-nowrap">{{category.name}}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

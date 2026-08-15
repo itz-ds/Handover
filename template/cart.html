@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+<h2 class="my-3">Cart</h2>
+<div class="card my-5">
+    <div class="card-body" id="cart-container">
+
+        {% if cart %}
+        <ul class="list-group list-group-flush">
+            {% for item in cart %}
+            <li class="cart-item list-group-item d-flex gap-3 mb-3" data-id="{{item.id}}">
+                <div class="col-2 d-flex justify-content-center align-items-center overflow-hidden rounded" style="height: 100px; width: 100px;">
+                    <img src="{{item.service.image}}" alt="service image" class="d-block h-100">
+                </div>
+                <div class="col-4 d-flex flex-column">
+                    <span class="h5">{{item.service.name}}</span>
+                    <span class="h6"><a href="#" style="text-decoration: none;" class="text-muted">{{item.service.category}}</a></span>
+                    <span class="service-rating text-success">
+                        <i class="bi bi-star-fill fs-sm text-success"></i>
+                        <span>{{item.service.rating}}</span>
+                        <a href="#">({{item.service.total_reviews}} reviews)</a>
+                    </span>
+                    <span class="" style="font-size: 12px;">
+                        Duration: {{item.service.duration_text}}
+                        {% if item.service.is_under_hour %}
+                        <span class="text-success">
+                            <i class="bi bi-lightning-fill"></i>
+                        </span>
+                        {% endif %}
+                    </span>
+                </div>
+                {% csrf_token %}
+                <div class="col-2 d-flex flex-column justify-content-center">
+                    <span class="service-price" data-price="{{item.service.discount_price}}">₹{{item.service.discount_price}}</span>
+                    {% if item.service.on_discount %}
+                        <span class="text-muted text-decoration-line-through"> ₹{{item.service.price}}</span>
+                        <span class="text-success">You save ₹{{item.service.saved_price}}</span>
+                    {% endif %}
+                </div>
+                <div class="col-2 d-flex flex-column align-items-center justify-content-center align-items-center  gap-2">
+                    
+                    <div class="input-group input-group-sm px-3">
+                        <button class="input-group-text btn btn-warning dec-btn" type="button"><i class="bi bi-dash-circle-fill"></i></button>
+                        <input type="text" readonly name="service-qty" class="form-control service-qty text-center border" style="width: 50px;" value="{{item.service_qty}}">
+                        <button class="input-group-text btn btn-warning inc-btn" type="button"><i class="bi bi-plus-circle-fill"></i></button>
+                    </div>
+                </div>
+                <div class="col-1 d-flex flex-column align-items-center justify-content-center align-items-center" >
+                    <span class="total-price">₹{{item.total_price}}</span>
+                </div>
+
+                <div class=" col-1  d-flex flex-column align-items-center justify-content-center align-items-center">
+                    <button class="btn btn-close del-cart" data-id="{{item.id}}"></button>
+                </div>   
+            </li>
+            {% endfor %}
+            <div class="d-flex flex-column ms-auto col col-md-6 col-lg-3 my-3">
+                <span class="border-bottom py-1 row px-3">
+                    <span class="col-6">Subtotal:</span>
+                    <span class="col-6 subtotal">₹{{subtotal}}</span>
+                </span>
+                <span class="border-bottom row py-1 px-3">
+                    <span class="col-6">GST:</span>
+                    <span class="col-6 gst">₹{{gst}}</span>
+                </span>
+                <span class="row py-1 px-3">
+                    <span class="col-6">Total:</span>
+                    <span class="col-6 total">₹{{total}}</span>
+                </span>
+            </div>
+            <div class="ms-auto col-md-6 col-lg-3">
+                <a href="{% url 'checkout' %}" class="btn w-100 btn-warning btn-outline-dark px-4 fw-bold">HAND<i class="bi bi-wrench-adjustable-circle"></i>VER</a>
+            </div>
+        </ul>
+        {% else %}
+        <div class="py-5">
+            <h3 class="text-center py-5">Your cart is empty</h3>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

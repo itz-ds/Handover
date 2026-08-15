@@ -1,0 +1,128 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+<div class="d-none d-md-block pt-3">
+    <h2>Home services at your doorstep</h2>
+    <div class="py-3 d-flex align-items-center gap-3 home-services overflow-hidden">
+        {% for category in categories %}
+        <div class=" ">
+            <a href="{% url 'category' id=category.id %}" class=" category-panel rounded py-3">
+                <i class="display-6 d-block text-center {{category.icon}}"></i>
+                <p class="text-center text-nowrap">{{category.name}}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="new-services pt-3">
+    <h2>Newly launched services</h2>
+    <div class="py-3 d-flex align-items-center overflow-hidden">
+        {% for service in new_services %}
+        <a href="{% url 'service' id=service.id  %}" class="home-card">
+            <div class="img-container">
+                <img src="{{service.image}}" alt="" class="h-100 d-block rounded">
+            </div>
+            <div class="d-flex flex-column gap-1">
+                <span class="service-name">{{service.name}}</span>
+                {% if service.is_under_hour  %}
+                <span class="text-muted p-0 m-0"><i class="bi bi-star-fill fs-sm"></i> {{service.duration_text}}</span>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<div class="most-booked pt-3">
+    <h2>Most booked services</h2>
+    <div class="py-3 d-flex align-items-center overflow-hidden">
+        {% for service in most_booked %}
+        <a href="{% url 'service' id=service.id  %}" class="home-card">
+            <div class="img-container">
+                <img src="{{service.image}}" alt="" class="h-100 d-block rounded">
+            </div>
+            <div class="d-flex flex-column gap-1">
+                <span class="service-name">{{service.name}}</span>
+                <span class="service-rating"><i class="bi bi-star-fill fs-sm"></i> {{service.rating}}</span>
+                <span class="service-price d-flex gap-2">
+                {% if service.on_discount %}
+                <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span>
+                {% else %}
+                <span>₹{{service.price}}</span>
+                {% endif %}   
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<div class="offer pt-3">
+    <h2>Offer & Discounts</h2>
+    <div class="py-3 d-flex align-items-center overflow-hidden">
+        {% for service in discount_services %}
+        <a href="{% url 'service' id=service.id  %}" class="home-card">
+            <div class="img-container">
+                <img src="{{service.image}}" alt="" class="h-100 d-block rounded">
+            </div>
+            <div class="d-flex flex-column gap-1">
+                <span class="service-name">{{service.name}}</span>
+                <span class="service-rating"><i class="bi bi-star-fill fs-sm"></i> {{service.rating}}</span>
+                <span class="service-price d-flex gap-2">
+                {% if service.on_discount %}
+                <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span>
+                {% else %}
+                <span>₹{{service.price}}</span>
+                {% endif %}   
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<div class="offer pt-3">
+    <h2>Monthly cleaning services</h2>
+    <div class="py-3 d-flex align-items-center overflow-hidden">
+        {% for service in cleaning_services %}
+        <a href="{% url 'service' id=service.id  %}" class="home-card">
+            <div class="img-container">
+                <img src="{{service.image}}" alt="" class="h-100 d-block rounded">
+            </div>
+            <div class="d-flex flex-column gap-1">
+                <span class="service-name">{{service.name}}</span>
+                <span class="service-rating"><i class="bi bi-star-fill fs-sm"></i> {{service.rating}}</span>
+                <span class="service-price d-flex gap-2">
+                {% if service.on_discount %}
+                <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span>
+                {% else %}
+                <span>₹{{service.price}}</span>
+                {% endif %}   
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<div class="offer pt-3">
+    <h2>Home Installation</h2>
+    <div class="py-3 d-flex align-items-center overflow-hidden">
+        {% for service in installation_services %}
+        <a href="{% url 'service' id=service.id  %}" class="home-card">
+            <div class="img-container">
+                <img src="{{service.image}}" alt="" class="h-100 d-block rounded">
+            </div>
+            <div class="d-flex flex-column gap-1">
+                <span class="service-name">{{service.name}}</span>
+                <span class="service-rating"><i class="bi bi-star-fill fs-sm"></i> {{service.rating}}</span>
+                <span class="service-price d-flex gap-2">
+                {% if service.on_discount %}
+                <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span>
+                {% else %}
+                <span>₹{{service.price}}</span>
+                {% endif %}   
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

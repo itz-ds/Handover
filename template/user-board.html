@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+<h2 class="my-3">Profile</h2>
+<div class="d-flex flex-column flex-lg-row gap-3 my-4">
+    <div class="col col-lg-3 py-2 border-lg-end  d-flex flex-column align-items-center">
+        <div class="mx-auto mb-3 rounded border overflow-hidden rounded-circle d-flex justify-content-center align-items-center" style="height: 150px; width: 150px;">
+            {% if profile.profile_pic %}
+            <img class="d-block h-100" src="{{profile.profile_pic}}" alt="">
+            {% else %}
+            <img class="d-block w-100 h-100" src="{% static 'images/default-profile-pic.png' %}" alt="">
+            {% endif %}
+        </div>
+        <h3 class="text-center mb-1">{{request.user.username}}</h3>
+        <a href="{% url 'user_details' %}" class="btn btn-warning btn-outline-dark mx-auto px-4">Edit profile</a>
+    </div>
+    <div class="col col-lg-9">
+        <div class="d-flex flex-column justify-content-center gap-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title mb-3"><h4>Basic Information</h4></div>
+                    {% if created %}
+                    <div class="card-text py-5 d-flex justify-content-center align-items-center">
+                        <a href="{% url 'user_details' %}" class="btn btn-warning btn-outline-dark mx-auto px-4">Edit profile</a>
+                    </div>
+                    {% else %}
+                    <div class="card-text d-flex flex-column">
+                        <span class="fw-bolder">{{profile.fullname}}</span>
+                        <span class="fs-5">{{profile.phone}}</span>
+                        <span>{{profile.street1}}, {{profile.street2}}, {{profile.city}} - {{profile.zipcode}}</span>
+                        <span>{{profile.state}}, {{profile.country}}.</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="d-flex flex-column flex-lg-row gap-3">
+                <div class="col col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title mb-3">
+                                <h4>Bookings</h4>
+                            </div>
+                            <div class="card-text">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title mb-3">
+                                <h4>Reviews</h4>
+                            </div>
+                            <div class="card-text">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title mb-3">
+                                <h4>About us</h4>
+                            </div>
+                            <div class="card-text">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

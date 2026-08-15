@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+<div class="d-flex flex-column align-items-start flex-md-row justify-content-center gap-5 pt-5 position-relative">
+    <div class="categories-panel col">
+        <div class=" d-flex flex-column align-items-start justify-content-center gap-3 " id="nav-grid">
+            <h2>Categories</h2>
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-2 row-cols-lg-3 border justify-content-center gap-1 p-3">
+                {% for category in categories %}
+                <a href="#{{category.as_class}}" class="col d-flex flex-column align-items-center justify-content-center category-panel rounded py-3">
+                    <i class="{{category.icon}} display-6"></i>
+                    <p class="text-nowrap">{{category.name}}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="services-panel col d-flex flex-column align-items-start justify-content-center gap-3 w-100 container" data-bs-spy="scroll" data-bs-target="#nav-grid" data-bs-smooth-scroll="true" data-bs-root-margin="0px 0px -40%">
+        
+            {% for category in categories %}
+            <div class="d-flex flex-column border-bottom border-5 w-100 gap-5 pt-5" id="{{category.as_class}}">
+                <h2>{{category.name}}</h2>
+                <div class="d-flex flex-column gap-3">
+                    {% for service in all_services %}
+                    {% if service.category.name == category.name %}
+                    <div class="d-flex gap-3 justify-content-between border-bottom service_data">
+                        <div class="text-section d-flex flex-column gap-1">
+                            <span class="service-name">{{service.name}}</span>
+                            <span class="service-rating text-success">
+                                <i class="bi bi-star-fill fs-sm text-success"></i>
+                                <span>{{service.rating}}</span>
+                                <a href="#">({{service.total_reviews}} reviews)</a>
+                            </span>
+                            <span class="service-price d-flex gap-2">
+                                {% if service.on_discount %}
+                                <span>₹{{service.discount_price}}</span><span class="text-muted text-decoration-line-through"> ₹{{service.price}}</span><span> • {{service.duration_text}}</span>
+                                {% else %}
+                                <span>₹{{service.price}}</span><span> • {{service.duration_text}}</span>
+                                {% endif %}   
+                            </span>
+                            <a href="{% url 'service' id=service.id %}" class="text-primary-emphasis mt-auto pb-3">View details</a>
+
+                        </div>
+                        
+                            <div class="img-section position-relative">
+                                <img src="{{service.image}}" alt="" class="d-block h-100">
+                                {% csrf_token %}
+                                {% if service in in_cart %}
+                                <a href="{% url 'cart' %}" class="btn btn-warning btn-outline-dark position-absolute bottom-0 start-50 translate-middle-x text-nowrap px-4" type="button"><i class="bi bi-minecart-loaded"></i> Cart</a>
+                                {% else %}
+                                <button class="btn btn-warning btn-outline-dark position-absolute bottom-0 start-50 translate-middle-x text-nowrap px-4 add-cart" type="button" data-id="{{service.id}}"><i class="bi bi-minecart"></i> Add</button>
+                                {% endif %}
+                            </div>
+                        
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        
+    </div>
+</div>
+{% endblock %}

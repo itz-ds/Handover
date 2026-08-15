@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+<div class="row justify-content-center py-5">
+    <div class="col col-lg-6">
+        <h2 class="text-center">
+            Registration Form
+        </h2>
+        <hr>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+                {{form.username}}
+                <label class="form-label" for="username">Username</label>
+                {% if form.errors.username %}
+                <label for="alert" class="text-danger">{{form.errors.username}}</label>
+                {% endif %}
+            </div>
+            <div class="form-floating mb-3">
+                {{form.email}}
+                <label class="form-label" for="email">Email</label>
+                {% if form.errors.email %}
+                <label for="alert" class="text-danger">{{form.errors.email}}</label>
+                {% endif %}
+            </div>
+            <div class="form-floating mb-3">
+                {{form.password1}}
+                <label class="form-label" for="password">Password</label>
+                {% if form.errors.password1 %}
+                <label for="alert" class="text-danger">{{form.errors.password1}}</label>
+                {% endif %}
+            </div>
+            <div class="form-floating mb-3">
+                {{form.password2}}
+                <label class="form-label" for="confirmpassword">Confirm Password</label>
+                {% if form.errors.password2 %}
+                <label for="alert" class="text-danger">{{form.errors.password2}}</label>
+                {% endif %}
+            </div>
+            <button class="btn btn-warning btn-lg btn-outline-dark w-100" type="submit">Register</button>
+        </form>
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+
+<h2 class="my-3">Basic details</h2>
+<div class="row my-4">
+    <div class="col col-lg-3 py-2 border-end d-flex flex-column align-items-center">
+        <div class="mx-auto mb-3 rounded border overflow-hidden rounded-circle d-flex justify-content-center align-items-center" style="height: 150px; width: 150px;">
+            {% if profile.profile_pic %}
+            <img class="d-block h-100" src="{{profile.profile_pic}}" alt="">
+            {% else %}
+            <img class="d-block w-100 h-100" src="{% static 'images/default-profile-pic.png' %}" alt="">
+            {% endif %}
+        </div>
+        <h3 class="text-center mb-1">{{request.user.username}}</h3>
+    </div>
+    <div class="col col-lg-9">
+        <div class="mb-3">
+            <a href="{% url 'user_board' %}" class=""><button class="btn btn-warning btn-outline-dark btn-sm px-4"><i class="bi bi-arrow-left-circle"></i> Back</button></a>
+        </div>
+        
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="form-floating mb-3">
+                {{form.fullname}}
+                <label class="form-label" for="fullname">Full name*</label>
+                {% if form.errors.fullname %}
+                <label for="alert" class="text-danger">{{form.errors.fullname}}</label>
+                {% endif %}
+            </div>
+
+            <div class="form-floating mb-3">
+                {{form.profile_pic}}
+                <label class="form-label" for="profile_pic">Profile Picture URL</label>
+                {% if form.errors.profile_pic %}
+                <label for="alert" class="text-danger">{{form.errors.profile_pic}}</label>
+                {% endif %}
+            </div>
+
+            <div class="form-floating mb-3">
+                {{form.phone}}
+                <label class="form-label" for="phone">Phone number*</label>
+                {% if form.errors.phone %}
+                <label for="alert" class="text-danger">{{form.errors.phone}}</label>
+                {% endif %}
+            </div>
+
+            <div class="form-floating mb-3">
+                {{form.street1}}
+                <label class="form-label" for="street1">Address line 1*</label>
+                {% if form.errors.street1 %}
+                <label for="alert" class="text-danger">{{form.errors.street1}}</label>
+                {% endif %}
+            </div>
+            <div class="form-floating mb-3">
+                {{form.street2}}
+                <label class="form-label" for="street2">Address line 2</label>
+                {% if form.errors.street2 %}
+                <label for="alert" class="text-danger">{{form.errors.street2}}</label>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        {{form.city}}
+                        <label class="form-label" for="city">City*</label>
+                        {% if form.errors.city %}
+                        <label for="alert" class="text-danger">{{form.errors.city}}</label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        {{form.state}}
+                        <label class="form-label" for="state">State*</label>
+                        {% if form.errors.state %}
+                        <label for="alert" class="text-danger">{{form.errors.state}}</label>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        {{form.country}}
+                        <label class="form-label" for="city">country</label>
+                        
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        {{form.zipcode}}
+                        <label class="form-label" for="zipcode">Zipcode*</label>
+                        {% if form.errors.zipcode %}
+                        <label for="alert" class="text-danger">{{form.errors.zipcode}}</label>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            
+            <button class="btn btn-warning btn-lg btn-outline-dark w-100" type="submit" my-2>Update</button>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANDOVER | {% block title %}{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/hand.svg' %}" type="image/svg">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Righteous&family=Saira+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css"/>
+</head>
+<body>
+    <header class="border-bottom">
+        <nav class="navbar navbar-expand gap-2 container align-items-center justify-content-between">
+
+            <h1><a href="{% url 'home' %}" class="navbar-brand d-none d-md-block">HAND<i class="bi bi-wrench-adjustable-circle"></i>VER</a></h1>
+
+            <ul class="navbar-nav ">
+                <li class="nav-item"><a href="{% url 'home' %}" class="nav-link"><button class="btn rounded-pill btn-outline-dark">Home</button></a></li>
+                <li class="nav-item"><a href="{% url 'services' %}" class="nav-link"><button class="btn rounded-pill btn-outline-dark">Services</button></a></li>
+            </ul>
+            
+            <ul class="navbar-nav ms-auto align-items-center">
+
+                <div class="input-group">
+                    <input type="text" name="search" id="search" class="form-control " placeholder="Find a Service">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                </div>
+
+                <li class="nav-item dropdown text-nowrap justify-content-center">
+                    <a href="#" class="nav-link " data-bs-toggle="dropdown">
+                        <button class="btn rounded btn-warning btn-outline-dark dropdown-toggle position-relative " >
+                            <i class="bi bi-minecart"></i>
+                            {% if cart_count > 0 %}
+                                <span class="badge bg-dark position-absolute top-0 translate-middle-y" id="cart-count">
+                                    {{cart_count}}
+                                </span>
+                            {% else %}
+                                <span class="badge d-none bg-dark position-absolute top-0 translate-middle-y" id="cart-count">
+                                    {{cart_count}}
+                                </span>
+                            {% endif %}
+                        </button>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-end" >
+                        
+                            <div id="mini-cart-container" class="list-unstyled mb-0">
+                                {% csrf_token %}
+                                {% if mini_cart %}
+                                {% for item in mini_cart %}
+                                <div class="d-flex justify-content-between align-items-center gap-2 cart-item" data-id="{{item.id}}">
+                                    <a href="{% url 'service' id=item.service.id  %}" class="nav-link d-flex align-items-center gap-2">
+                                        <div class="d-flex justify-content-center align-items-center overflow-hidden rounded" style="width: 25px; height: 25px;">
+                                            <img src="{{item.service.image}}" alt="service image" class="d-block h-100">
+                                        </div>
+                                        <span class="d-flex flex-column">
+                                            <span class="fw-bold">
+                                                {{item.service.name}}
+                                            </span>
+                                            <span class="" style="font-size: 12px;">
+                                                Duration: {{item.service.duration_text}}
+                                                {% if item.service.is_under_hour %}
+                                                <span class="text-success">
+                                                    <i class="bi bi-lightning-fill"></i>
+                                                </span>
+                                                {% endif %}
+                                            </span>
+                                        </span>
+                                    </a>
+                                    <button class="btn btn-close pe-3 del-cart" data-id="{{item.id}}"></button>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <div class="text-center py-3" id="empty-cart">
+                                    Your cart is empty
+                                </div>
+                                {% endif %}
+                            </div>
+                        
+                        <div><a href="{% url 'cart' %}" class="nav-link">
+                            <button class="btn btn-warning btn-outline-dark w-100 rounded">Go to Cart</button>
+                        </a></div>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown text-nowrap justify-content-center">
+
+                    <a href="#" class="nav-link " data-bs-toggle="dropdown">
+                        <button class="btn rounded btn-outline-dark dropdown-toggle " >
+                            {% if request.user.is_authenticated %}
+                            <i class="bi bi-person"></i>
+                            <span>{{request.user}}</span>
+                            {% else %}
+                            <i class="bi bi-person"></i>
+                            {% endif %}
+                        </button>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-xl-start">
+
+                        {% if request.user.is_authenticated %}
+
+                        <li><a href="{% url 'user_board' %}" class="nav-link">
+                            <button class="btn btn-outline-dark w-100 rounded">Profile</button>
+                        </a></li>
+
+                        <li><a href="#" class="nav-link">
+                            <button class="btn btn-outline-dark w-100 rounded">Booking</button>
+                        </a></li>
+
+                        <li><a href="{% url 'user_logout' %}" class="nav-link">
+                            <button class="btn btn-outline-dark w-100 rounded">Logout</button>
+                        </a></li>
+
+                        {% else %}
+
+                        <li><a href="{% url 'user_login' %}" class="nav-link">
+                            <button class="btn btn-outline-dark w-100 rounded">Login</button>
+                        </a></li>
+
+                        <li><a href="{% url 'user_register' %}" class="nav-link">
+                            <button class="btn btn-outline-dark w-100 rounded ">Register</button>
+                        </a></li>
+
+                        {% endif %}
+
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+
+    <main class="container p-0 py-3">
+        {% block main %}
+
+        {% endblock %}
+    </main>
+
+
+
+
+    <footer class="footer pt-5 py-3">
+        <div class="container p-0 ">
+
+            <p class="h1 navbar-brand pb-3">HAND<i class="bi bi-wrench-adjustable-circle"></i>VER</p>
+            <div class="d-flex flex-column flex-lg-row justify-content-between border-bottom py-3 container">
+                <div>
+                    <h4 class="pb-3">Company</h4>
+                    <p><a href="#" class="nav-link">About us</a></p>
+                    <p><a href="#" class="nav-link">Terms & conditions</a></p>
+                    <p><a href="#" class="nav-link">Privacy policy</a></p>
+                    <p><a href="#" class="nav-link">Careers</a></p>
+                </div>
+                <div>
+                    <h4 class="pb-3">For customers</h4>
+                    <p><a href="#" class="nav-link">Reviews</a></p>
+                    <p><a href="#" class="nav-link">Contact us</a></p>
+                    
+                </div>
+                <div>
+                    <h4 class="pb-3">For professionals</h4>
+                    <p><a href="#" class="nav-link">Register as a professional</a></p>
+                </div>
+                <div>
+                    <h4 class="pb-3">Social links</h4>
+                    <button class="btn btn-outline-dark rounded"><i class="bi bi-facebook"></i></button>
+                    <button class="btn btn-outline-dark rounded"><i class="bi bi-instagram"></i></button>
+                    <button class="btn btn-outline-dark rounded"><i class="bi bi-twitter-x"></i></button>
+                    <button class="btn btn-outline-dark rounded"><i class="bi bi-whatsapp"></i></button>
+                </div>
+            </div>
+            <p class="py-3">
+                &copy; Copyright 2026 HANDOVER All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+    <script>
+
+        alertify.set('notifier','position', 'bottom-left');
+        messages.forEach(msg => {
+            alertify.success(msg);
+        });
+    </script>
+</body>
+</html>
