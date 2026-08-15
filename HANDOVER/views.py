@@ -195,7 +195,7 @@ def checkout(request):
 def place_order(request):
 
     if request.method == 'POST':
-        return JsonResponse({'status':'Hi'})
+        return JsonResponse({'status':'From GIT'})
 
     return redirect('home')
 
