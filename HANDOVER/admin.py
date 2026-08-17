@@ -26,6 +26,37 @@ class UserProfileAdmin(admin.ModelAdmin):
         'country',
     )
 
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'fullname',
+        'phone',
+        'street1',
+        'street2',
+        'city',
+        'state',
+        'country',
+        'zipcode',
+        'total_price',
+        'payment_mode',
+        'payment_id',
+        'status',
+        'message',
+        'tracking_no',
+        'created_at',
+        'updated_at',
+    )
+
+@admin.register(OrderService)
+class OrderServiceAdmin(admin.ModelAdmin):
+    list_display = (
+        'order',
+        'service',
+        'price',
+        'quantity',
+    )
+
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):

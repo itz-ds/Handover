@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
-import json
+import json, random
 from decimal import Decimal
 from django.db.models import Q
 from .models import *
@@ -185,19 +185,63 @@ def checkout(request):
     summary = cart_summary(request)
     profile = get_object_or_404(UserProfile, user=request.user)
 
+    form = UserProfileForm(instance=profile)
+
     return render (request, 'checkout.html', {
         'cart': cart,
         **summary,
-        'profile': profile
+        'profile': profile,
+        'form': form
     })
 
 @login_required(login_url='user_login')
 def place_order(request):
 
     if request.method == 'POST':
-        return JsonResponse({'status':'From GIT'})
+        if request.user.is_authenticated:
+            user_profile = UserProfile.objects.get(user=request.user)
+            cart_items = Cart.objects.filter(user=request.user)
+            summary = cart_summary(request)
+            print(summary)
+            new_order = Order()
 
+            new_order.user = request.user
+            new_order.fullname = user_profile.fullname
+            new_order.email = request.user.email
+            new_order.phone = user_profile.phone
+            new_order.street1 = user_profile.street1
+            new_order.street2 = user_profile.street2
+            new_order.city = user_profile.city
+            new_order.state = user_profile.state
+            new_order.country = user_profile.country
+            new_order.zipcode = user_profile.zipcode
+            new_order.total_price = summary['total']
+            # new_order.payment_mode =
+            # new_order.payment_id =
+            # new_order.status =
+            # new_order.message =
+            new_order.tracking_no = trakenumber()
+            new_order.save()
+
+            for item in cart_items:
+                OrderService.objects.create(
+                    order = new_order,
+                    service = item.service,
+                    price = item.service.discount_price,
+                    quantity = item.service_qty
+                )
+
+            Cart.objects.filter(user = request.user).delete()
+
+            messages.success(request, 'Order Placed')
     return redirect('home')
+
+def trakenumber():
+    trackno = 'HD'+str(random.randint(11111111,99999999))
+    while Order.objects.filter(tracking_no=trackno).exists():
+        trackno = 'HD'+str(random.randint(11111111,99999999))
+
+    return trackno
 
 
 #USER_VIEWS

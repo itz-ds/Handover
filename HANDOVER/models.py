@@ -139,6 +139,7 @@ class Order(models.Model):
             on_delete = models.CASCADE
         )
     fullname = models.CharField(max_length = 150)
+    email = models.EmailField(max_length = 150)
     phone = models.CharField(max_length=10)
     street1 = models.CharField(max_length=150)
     street2 = models.CharField(max_length=150, blank=True)
@@ -165,7 +166,7 @@ class Order(models.Model):
     )
     status = models.CharField(max_length=150,choices=order_statuses, default='Pending')
     message = models.TextField(null=True)
-    tracking_no = models.CharField(max_length=150, null=True)
+    tracking_no = models.CharField(max_length=10, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -180,4 +181,4 @@ class OrderService(models.Model):
     quantity = models.IntegerField(null=False)
 
     def __str__(self):
-        return '{} - {}'.format(self.order.id, self.order.tracking_no)
+        return f'{self.order.id} - {self.order.tracking_no}'
