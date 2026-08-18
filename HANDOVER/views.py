@@ -152,12 +152,22 @@ def cart_summary(request):
     for item in cart_items:
         subtotal += item.total_price
 
+    total_discount = 0
+    for item in cart_items:
+        total_discount += item.total_discount
+
+    actual_price = 0
+    for item in cart_items:
+        actual_price += item.actual_price
+
     gst = round(subtotal * Decimal("0.18"),2)
     total = subtotal + gst
 
     return {
         'cart_count': cart_count,
         'subtotal': subtotal,
+        'actual_price': actual_price,
+        'total_discount': total_discount,
         'gst': gst,
         'total': total
     }
@@ -253,8 +263,33 @@ def user_board(request):
     profile, created = UserProfile.objects.get_or_create(
             user=request.user
         )
+
+    bookings_count = Order.objects.filter(user = request.user).count()
+    print(type(bookings_count), bookings_count)
     
-    return render(request, 'user-board.html', {'profile': profile, 'created':created})
+    return render(request, 'user-board.html', {'profile': profile, 'created':created, 'bookings_count': bookings_count})
+
+@login_required(login_url='user_login')
+def user_bookings(request):
+
+    orders = Order.objects.filter(user = request.user)
+
+    context ={
+        'orders': orders
+    }
+    return render(request, 'user-bookings.html', context)
+
+@login_required(login_url='user_login')
+def booking_details(request, tracking_no):
+
+    order = Order.objects.get(tracking_no = tracking_no)
+    services = OrderService.objects.filter(order = order)
+
+    context ={
+        'order': order,
+        'services': services
+    }
+    return render(request, 'user-booking-details.html', context)
 
 def user_details(request):
     if not request.user.is_authenticated:

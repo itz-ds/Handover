@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+<h2 class="my-3">Bookings</h2>
+<div class="row row-cols-1 row-cols lg-3 g-2">
+
+    {% if orders %}
+    {% for order in orders %}
+    <div class="card col-lg-6">
+        <div class="card-header d-flex justify-content-between">
+            <div class="d-flex flex-column justify-content-center">
+                <span class="text-muted fw-bold" style="font-size: 12px;">Order ID</span>
+                <a href="#" class="btn btn-warning btn-outline-dark">{{order.tracking_no}}</a>
+            </div>
+            <div class="d-flex flex-column align-items-end justify-content-center">
+                <span class="text-muted fw-bold" style="font-size: 12px;">Total Amount</span>
+                <span class="fw-bold fs-6 text-success">₹{{order.total_price}}</span>
+                <span class="text-muted fw-bold" style="font-size: 12px;">{{order.payment_mode}}</span>
+            </div>
+            
+        </div>
+        <div class="card-body">
+            <div class="card-text d-flex justify-content-between">
+                <div class="d-flex flex-column">
+                    <span class="text-muted fw-bold" style="font-size: 12px;">Order Date</span>
+                    <span class="fw-bold">{{order.created_at|date:'d-m-Y h:i A'}}</span>
+                </div>
+                <div class="d-flex flex-column align-items-end">
+                    <span class="text-muted fw-bold" style="font-size: 12px;">Status</span>
+                    <span class="fw-bold fs-5 mb-2 
+                    {% if order.status == 'Pending' %}
+                    text-warning
+                    {% elif order.status == 'Confirmed' %}
+                    text-success
+                    {% elif order.status == 'Cancelled' %}
+                    text-danger
+                    {% elif order.status == 'On Service' %}
+                    text-warning
+                    {% elif order.status == 'Completed' %}
+                    text-success
+                    {% endif %}
+                    ">{{order.status}}</span>
+
+                    <a href="{% url 'booking_details' tracking_no=order.tracking_no  %}" class="btn btn-warning btn-outline-dark">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h5>No Orders placed</h5>
+    {% endif %}
+</div>
+
+
+{% endblock %}

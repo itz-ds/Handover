@@ -1,0 +1,116 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block main %}
+<h2 class="my-3">Booking Details</h2>
+<div class="d-flex flex-column gap-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-text row">
+                <div class="col-6 d-flex flex-column gap-2">
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="text-muted" style="font-size: 14px;">Order ID</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="fw-bold">{{order.tracking_no}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="text-muted" style="font-size: 14px;">Order Date</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="fw-bold">{{order.created_at|date:'d-m-Y h:i A'}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="text-muted" style="font-size: 14px;">Total Amount</span>
+                        </div>
+                        <div class="col-6 d-flex flex-column">
+                            <span class="fw-bold text-success">₹{{order.total_price}}</span>
+                            <span class="text-muted" style="font-size: 12px;">{{order.payment_mode}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="text-muted" style="font-size: 14px;">Status</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="fw-bold fs-5 mb-2 
+                            {% if order.status == 'Pending' %}
+                            text-warning
+                            {% elif order.status == 'Confirmed' %}
+                            text-success
+                            {% elif order.status == 'Cancelled' %}
+                            text-danger
+                            {% elif order.status == 'On Service' %}
+                            text-warning
+                            {% elif order.status == 'Completed' %}
+                            text-success
+                            {% endif %}
+                            ">{{order.status}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 d-flex flex-column">
+                    <span class="h3">{{order.fullname|capfirst}}</span>
+                    <p class="fs-5">+91 {{order.phone}}</p>
+                    <span class="text-muted">{{order.street1|capfirst}}</span>
+                    {% if order.street2 %}
+                    <span class="text-muted">{{order.street2|capfirst}}</span>
+                    {% endif %}
+                    <span class="text-muted">{{order.city|capfirst}} - {{order.zipcode}}</span>
+                    <span class="text-muted">{{order.state|capfirst}}, {{order.country|capfirst}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">
+                <h4 class="text-muted fw-bold mb-3">Services Details</h4>
+            </div>
+            <div class="card-text">
+                {% for service in services %}
+                <div class="row">
+
+                    <div class="col-3 d-flex justify-content-center">
+                        <div class="img-container" style="width: 75px; height: 75px;">
+                            <img src="{{service.service.image}}" alt="service image" class="d-block h-100">
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex flex-column">
+                    <a href="{% url 'service' id=service.service.id %}" class="h5 text-decoration-none">{{service.service.name}}</a>
+                    <span class="h6"><a href="{% url 'category' id=service.service.category.id %}" style="text-decoration: none;" class="text-muted">{{service.service.category}}</a></span>
+                    <span class="text-muted" style="font-size: 12px;">NOS: {{service.quantity}}</span>
+                    </div>
+                    <div class="col-3">
+                        <span class="fw-bold">₹{{service.price|floatformat:2}}</span>
+                        
+                        {% if service.service.on_discount %}
+                        <span class="text-muted text-decoration-line-through" style="font-size: 14px;"> ₹{{service.service.price}}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6 ms-auto">
+                    <div class="row">
+                        <span class="col-6 text-muted fw-bold">Total Charge <span style="font-size: 8px;" class="fw-light">(includes GST)</span> </span>
+                        <span class="fw-bold col-6">₹{{order.total_price|floatformat:2}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

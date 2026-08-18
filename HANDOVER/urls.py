@@ -36,6 +36,8 @@ urlpatterns = [
 
     path('user-board/', views.user_board, name='user_board'),
     path('user-details/', views.user_details, name='user_details'),
+    path('user-bookings/', views.user_bookings, name='user_bookings'),
+    path('bookings/<slug:tracking_no>', views.booking_details, name='booking_details'),
     path('user-register/', views.user_register, name='user_register'),
     path('user-login/', views.user_login, name='user_login'),
     path('user-logout/', views.user_logout, name='user_logout'),

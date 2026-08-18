@@ -126,8 +126,14 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
+    def actual_price(self):
+        return self.service.price * self.service_qty
+    @property
     def total_price(self):
         return self.service.discount_price * self.service_qty
+    @property
+    def total_discount(self):
+        return self.service.saved_price * self.service_qty
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.user.username)
