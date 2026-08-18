@@ -153,7 +153,10 @@ class Order(models.Model):
     state = models.CharField(max_length=150)
     country = models.CharField(max_length=150, default='India')
     zipcode = models.CharField(max_length=10)
-    total_price = models.FloatField(null=False)
+    actual_price = models.DecimalField(decimal_places=2, max_digits=10, null=False, default=0.00)
+    subtotal = models.DecimalField(decimal_places=2, max_digits=10, null=False, default=0.00)
+    gst = models.DecimalField(decimal_places=2, max_digits=10, null=False, default=0.00)
+    total_price = models.DecimalField(decimal_places=2, max_digits=10, null=False)
     payment_modes = (
         ('Cash On Delivery', 'Cash On Delivery'),
         ('UPI', 'UPI'),

@@ -163,6 +163,8 @@ def cart_summary(request):
     gst = round(subtotal * Decimal("0.18"),2)
     total = subtotal + gst
 
+    print(subtotal, actual_price)
+
     return {
         'cart_count': cart_count,
         'subtotal': subtotal,
@@ -225,6 +227,9 @@ def place_order(request):
             new_order.state = user_profile.state
             new_order.country = user_profile.country
             new_order.zipcode = user_profile.zipcode
+            new_order.actual_price = summary['actual_price']
+            new_order.gst = summary['gst']
+            new_order.subtotal = summary['subtotal']
             new_order.total_price = summary['total']
             # new_order.payment_mode =
             # new_order.payment_id =

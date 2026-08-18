@@ -225,6 +225,7 @@ function updateDecBtn(row) {
 
 function updateSummary(data){
     
+    const actual_price = document.querySelector('.actual_price')
     const subtotal = document.querySelector('.subtotal');
     const gst = document.querySelector('.gst');
     const total = document.querySelector('.total')
@@ -233,9 +234,21 @@ function updateSummary(data){
         return;
     }
 
-    subtotal.textContent = '₹'+ parseFloat(data.subtotal).toFixed(2)
-    gst.textContent = '₹'+ parseFloat(data.gst).toFixed(2)
-    total.textContent = '₹'+ parseFloat(data.total).toFixed(2)
+    subtotal.textContent = '₹'+ parseFloat(data.subtotal).toFixed(2);
+    gst.textContent = '₹'+ parseFloat(data.gst).toFixed(2);
+    total.textContent = '₹'+ parseFloat(data.total).toFixed(2);
+
+    if(actual_price){
+        if (parseFloat(data.subtotal) !== parseFloat(data.actual_price)){
+
+            actual_price.textContent = '₹'+ parseFloat(data.actual_price).toFixed(2);
+        } else {
+            actual_price.textContent = '';
+        }
+    }
+
+    console.log(subtotal, actual_price);
+    
 
 };
 

@@ -13,25 +13,25 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='order',
             name='actual_price',
-            field=models.FloatField(default=''),
+            field=models.FloatField(default=0.00),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='order',
             name='gst',
-            field=models.FloatField(default=''),
+            field=models.FloatField(default=0.00),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='order',
             name='subtotal',
-            field=models.FloatField(default=''),
+            field=models.FloatField(default=0.00),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='order',
             name='total_discount',
-            field=models.FloatField(default=''),
+            field=models.FloatField(default=0.00),
             preserve_default=False,
         ),
     ]
