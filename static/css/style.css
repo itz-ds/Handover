@@ -85,3 +85,7 @@
 .service-price{
     font-size: 14px;
 }
+.payment-details {
+    margin-top: 10px;
+    display: none;
+}

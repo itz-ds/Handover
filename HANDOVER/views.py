@@ -41,10 +41,12 @@ def service(request, id):
         category = service.category
     ).exclude(id=id)
     other_categories = Category.objects.exclude(id=service.category.id)
+    in_cart=[]
     if request.user.is_authenticated:
         in_cart = Service.objects.filter(
             cart__user = request.user
         )
+        print(in_cart)
     return render(
         request,
         'service.html',
