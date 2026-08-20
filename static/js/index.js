@@ -440,7 +440,6 @@ if(checkoutPage){
         
         radio.addEventListener('change', function () {
             paymentDetails.forEach(detail => {
-                console.log(detail);
                 
                 detail.style.display = 'none';
             });
@@ -449,7 +448,85 @@ if(checkoutPage){
             const currentDetails = currentOption.querySelector('.payment-details');
             currentDetails.style.display = 'block'
 
-        })
+        });
 
-    })
+    });
+
+    const verifyBtn = document.getElementById('verify');
+    
+    if(verifyBtn){
+        verifyBtn.addEventListener('click', function () {
+            const emailInput = document.querySelector('#email');
+            
+            
+            const email = emailInput.value.trim();
+            if(!email){
+                alertify.error('Enter Your Email');
+                return;
+            }
+
+            fetch(
+                '/send-otp/',
+                {
+                    method: 'POST',
+
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken':csrfToken
+                    },
+
+                    body: new URLSearchParams({
+                        email: email
+                    })
+                }
+            )
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'OTP sent'){
+                    alertify.success('OTP sent to your email');
+                    const otpSection = document.querySelector('#otp-section');
+                    otpSection.classList.remove('d-none');
+                    verifyBtn.disabled = true;
+                }
+            });
+            
+
+        });
+    };
+
+    const verifyOtpBtn = document.querySelector('#verify-otp')
+    if (verifyOtpBtn){
+
+        verifyOtpBtn.addEventListener('click', function(){
+            const otpInput = document.querySelector('#otp')
+            const otp = otpInput.value.trim();
+            if(!otp){
+                alertify.error('Enter OTP')
+                return;
+            }
+            fetch('/verify-otp/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken':csrfToken
+                },
+
+                body: new URLSearchParams({
+                    otp: otp
+                })
+            }).then(response => response.json())
+            .then(data =>{
+                if(data.verified){
+                    alertify.success('Email Verified');
+                    otpInput.disabled = true;
+                    verifyOtpBtn.disabled = true;
+                    verifyBtn.textContent = 'Verified';
+                    verifyBtn.classList.remove('btn-warning');
+                    verifyBtn.classList.add('btn-success');
+                } else {
+                    alertify.error(data.status);
+                }
+            });
+        });
+    }
 }

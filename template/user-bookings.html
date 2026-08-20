@@ -3,11 +3,12 @@
 
 {% block main %}
 <h2 class="my-3">Bookings</h2>
-<div class="row row-cols-lg-2 g-3">
+<div class="row">
 
     {% if orders %}
     {% for order in orders %}
-    <div class="card col">
+    <div class="col-12 col-lg-6">
+    <div class="card mb-2">
         <div class="card-header d-flex justify-content-between">
             <div class="d-flex flex-column justify-content-center">
                 <span class="text-muted fw-bold" style="font-size: 12px;">Order ID</span>
@@ -46,6 +47,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     {% endfor %}
     {% else %}

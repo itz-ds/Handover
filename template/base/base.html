@@ -189,10 +189,28 @@
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
     <script src="{% static 'js/index.js' %}"></script>
     <script>
-
+        const messages = [
+            {% for message in messages %}
+                {
+                    text: "{{ message|escapejs }}",
+                    tag: "{{ message.tags }}"
+                },
+            {% endfor %}
+        ];
         alertify.set('notifier','position', 'bottom-left');
         messages.forEach(msg => {
-            alertify.success(msg);
+            if (msg.tag === 'success') {
+            alertify.success(msg.text);
+        }
+        else if (msg.tag === 'error') {
+            alertify.error(msg.text);
+        }
+        else if (msg.tag === 'warning') {
+            alertify.warning(msg.text);
+        }
+        else {
+            alertify.message(msg.text);
+        }
         });
     </script>
 </body>

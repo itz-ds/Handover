@@ -7,9 +7,12 @@ from django.db.models import Q
 from .models import *
 from .forms import *
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 
+
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+
+from django.core.mail import send_mail
 
 # SERVICE_VIEWS
 
@@ -191,6 +194,9 @@ def cart_data(request):
 def checkout(request):
     rawcart = Cart.objects.filter(user=request.user)
 
+    if not rawcart:
+        return redirect('cart')
+
     for item in rawcart:
         if not item.service.is_active:
             Cart.objects.delete(id = item.id, user = request.user)
@@ -209,49 +215,128 @@ def checkout(request):
     })
 
 @login_required(login_url='user_login')
+def send_otp(request):
+
+    if request.method != 'POST':
+        return JsonResponse({
+            'status': 'Invalid request'
+        }, status=400)
+
+    email = request.POST.get('email')
+
+    if not email:
+        return JsonResponse({
+            'status': 'Email required'
+        }, status = 400)
+
+    otp = random.randint(100000, 999999)
+
+    request.session['payment_otp'] = str(otp)
+    print(request.session)
+    request.session['payment_email'] = email
+
+    send_mail(
+        'HANDOVER Email Verification',
+        f'Your Verification OTP is {otp}',
+        None,
+        [email],
+        fail_silently=False
+    )
+
+    return JsonResponse({
+        'status': 'OTP sent'
+    })
+
+@login_required(login_url='user_login')
+def verify_otp(request):
+
+    if request.method != 'POST':
+        return JsonResponse({
+            'status': 'Invalid request'
+        }, status=400)
+
+    entered_otp = request.POST.get('otp')
+
+    saved_otp = request.session.get('payment_otp')
+
+    if not saved_otp:
+        return JsonResponse({
+            'status': 'OTP expired or not requested'
+        }, status = 400)
+
+    if entered_otp == saved_otp:
+
+        request.session['payment_verified'] = True
+
+        request.session.pop('payment_otp', None)
+
+        return JsonResponse({
+            'status': 'Email verified',
+            'verified': True
+        })
+
+    return JsonResponse({
+        'status': 'Invalid OTP',
+        'verified': False
+    }, status = 400)
+
+
+
+@login_required(login_url='user_login')
 def place_order(request):
 
-    if request.method == 'POST':
-        if request.user.is_authenticated:
-            user_profile = UserProfile.objects.get(user=request.user)
-            cart_items = Cart.objects.filter(user=request.user)
-            summary = cart_summary(request)
-            print(summary)
-            new_order = Order()
+    if request.method != 'POST':
+        return redirect('home')
 
-            new_order.user = request.user
-            new_order.fullname = user_profile.fullname
-            new_order.email = request.user.email
-            new_order.phone = user_profile.phone
-            new_order.street1 = user_profile.street1
-            new_order.street2 = user_profile.street2
-            new_order.city = user_profile.city
-            new_order.state = user_profile.state
-            new_order.country = user_profile.country
-            new_order.zipcode = user_profile.zipcode
-            new_order.actual_price = summary['actual_price']
-            new_order.gst = summary['gst']
-            new_order.subtotal = summary['subtotal']
-            new_order.total_price = summary['total']
-            # new_order.payment_mode =
-            # new_order.payment_id =
-            # new_order.status =
-            # new_order.message =
-            new_order.tracking_no = trakenumber()
-            new_order.save()
+    if not request.session.get('payment_verified'):
+        messages.error(
+            request,
+            'Please Verify your email first'
+        )
+        return redirect('checkout')
 
-            for item in cart_items:
-                OrderService.objects.create(
-                    order = new_order,
-                    service = item.service,
-                    price = item.service.discount_price,
-                    quantity = item.service_qty
-                )
 
-            Cart.objects.filter(user = request.user).delete()
 
-            messages.success(request, 'Order Placed')
-    return redirect('home')
+    user_profile = UserProfile.objects.get(user=request.user)
+    cart_items = Cart.objects.filter(user=request.user)
+    summary = cart_summary(request)
+    print(summary)
+    new_order = Order()
+
+    new_order.user = request.user
+    new_order.fullname = user_profile.fullname
+    new_order.email = request.user.email
+    new_order.phone = user_profile.phone
+    new_order.street1 = user_profile.street1
+    new_order.street2 = user_profile.street2
+    new_order.city = user_profile.city
+    new_order.state = user_profile.state
+    new_order.country = user_profile.country
+    new_order.zipcode = user_profile.zipcode
+    new_order.actual_price = summary['actual_price']
+    new_order.gst = summary['gst']
+    new_order.subtotal = summary['subtotal']
+    new_order.total_price = summary['total']
+    # new_order.payment_mode =
+    # new_order.payment_id =
+    # new_order.status =
+    # new_order.message =
+    new_order.tracking_no = trakenumber()
+    new_order.save()
+
+    for item in cart_items:
+        OrderService.objects.create(
+            order = new_order,
+            service = item.service,
+            price = item.service.discount_price,
+            quantity = item.service_qty
+        )
+
+    Cart.objects.filter(user = request.user).delete()
+
+    messages.success(request, 'Order Placed')
+    request.session.pop('payment_verified', None)
+    return redirect('booking_details', tracking_no=new_order.tracking_no)
 
 def trakenumber():
     trackno = 'HD'+str(random.randint(11111111,99999999))
@@ -289,7 +374,11 @@ def user_bookings(request):
 @login_required(login_url='user_login')
 def booking_details(request, tracking_no):
 
-    order = Order.objects.get(tracking_no = tracking_no)
+    order = get_object_or_404(
+        Order,
+        tracking_no=tracking_no,
+        user=request.user
+    )
     services = OrderService.objects.filter(order = order)
 
     context ={

@@ -34,7 +34,7 @@
                     <tbody>
                         {% for item in cart %}
                         <tr>
-                            <td>{{item.service.name}}</td>
+                            <td><span class="d-flex gap-2"><span class="img-container" style="width: 24px; height: 24px; border-radius: 2px; margin-bottom: 0px;"><img src="{{item.service.image}}" class="d-block h-100" alt="service image"></span><span>{{item.service.name}}</span></span></td>
                             <td>{{item.service_qty}}</td>
                             <td>{{item.total_price}}</td>
                         </tr>
@@ -76,19 +76,29 @@
                             <label for="payment_mode1" class="form-check-label">Cash on Hand</label>
 
                             <div class="payment-details mt-3">
-                                <div class="row">
-                                    <div class="col-3">
-
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="" id="" class="form-control" readonly value="+91" maxlength="3">
-                                            <label for=""></label>
-                                        </div>
-                                    </div>
+                                <div class="row align-items-center">
+                                    
                                     <div class="col-9">
 
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="mobile_no" id="mobile_no" class="form-control number-only" maxlength="10">
-                                            <label for="mobile_no">Verify your Mobile Number</label>
+                                            <input type="email" name="email" id="email" class="form-control">
+                                            <label for="email">Enter your Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <button class="btn btn-warning btn-outline-dark px-3" type="button" id="verify">Verify</button>
+                                    </div>
+                                </div>
+                                <div id="otp-section" class="d-none">
+                                    <div class="row align-items-center">
+                                        <div class="col-9">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="otp" id="otp" class="form-control" maxlength="6" inputmode="numeric">
+                                                <label for="otp">Enter OTP</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button class="btn btn-warning btn-outline-dark px-3" type="button" id="verify-otp">Verify</button>
                                         </div>
                                     </div>
                                 </div>
