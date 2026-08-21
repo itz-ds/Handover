@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block main %}
-<h2 class="my-3">Checkout</h2>
+<h2 class="my-3" id="checkout">Checkout</h2>
 <form action="{% url 'place_order' %}" method="post">
     {% csrf_token %}
     <div class="d-flex flex-column flex-lg-row my-5 gap-3">
@@ -34,7 +34,7 @@
                     <tbody>
                         {% for item in cart %}
                         <tr>
-                            <td>{{item.service.name}}</td>
+                            <td><span class="d-flex gap-2"><span class="img-container" style="width: 24px; height: 24px; border-radius: 2px; margin-bottom: 0px;"><img src="{{item.service.image}}" class="d-block h-100" alt="service image"></span><span>{{item.service.name}}</span></span></td>
                             <td>{{item.service_qty}}</td>
                             <td>{{item.total_price}}</td>
                         </tr>
@@ -58,7 +58,148 @@
     
                 <div class="d-flex gap-5">
                     <a href="{% url 'cart' %}" class="btn me-auto col-3  btn-warning btn-outline-dark px-4 fw-bold">BACK</a>
-                    <button type="submit" class="btn ms-auto col-6 btn-warning btn-outline-dark px-4 fw-bold">CONFIRM HAND<i class="bi bi-wrench-adjustable-circle"></i>VER</button>
+                    <button type="button" class="btn ms-auto col-6 btn-warning btn-outline-dark px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Payment</button>
+                </div>
+
+
+                <!-- Modal -->
+                <div class="modal my-5 fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Choose Payment Method</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body px-5 payment-methods">
+                        <div class="form-check mb-3 payment-option">
+                            <input type="radio" name="payment_mode" id="payment_mode1" class="form-check-input payment-radio" value="Cash On Delivery">
+                            <label for="payment_mode1" class="form-check-label">Cash on Hand</label>
+
+                            <div class="payment-details mt-3">
+                                <div class="row align-items-center">
+                                    
+                                    <div class="col-9">
+
+                                        <div class="form-floating mb-3">
+                                            <input type="email" name="email" id="email" class="form-control">
+                                            <label for="email">Enter your Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <button class="btn btn-warning btn-outline-dark px-3" type="button" id="verify">Verify</button>
+                                    </div>
+                                </div>
+                                <div id="otp-section" class="d-none">
+                                    <div class="row align-items-center">
+                                        <div class="col-9">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="otp" id="otp" class="form-control" maxlength="6" inputmode="numeric">
+                                                <label for="otp">Enter OTP</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button class="btn btn-warning btn-outline-dark px-3" type="button" id="verify-otp">Verify</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="form-check mb-3 payment-option">
+                            <input type="radio" name="payment_mode" id="payment_mode2" class="form-check-input payment-radio" value="UPI">
+                            <label for="payment_mode2" class="form-check-label">UPI</label>
+
+                            <div class="payment-details mt-3">
+                                <div class="form-floating mb-3">
+                                    <input type="email" name="upiid" id="upiid" class="form-control">
+                                    <label for="upiid">Verify your UPI ID</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3 payment-option">
+                            <input type="radio" name="payment_mode" id="payment_mode3" class="form-check-input payment-radio" value="Internet Banking">
+                            <label for="payment_mode3" class="form-check-label">Internet Banking</label>
+
+                            <div class="payment-details mt-3">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="bank_name" id="bank_name" class="form-control">
+                                    <label for="bank_name">Select your Bank</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="bank_username" id="bank_username" class="form-control">
+                                    <label for="bank_username">Enter your USER ID</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="bank_password" id="bank_password" class="form-control">
+                                    <label for="bank_password">Enter your Password</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3 payment-option">
+                            <input type="radio" name="payment_mode" id="payment_mode4" class="form-check-input payment-radio" value="Debit Card">
+                            <label for="payment_mode4" class="form-check-label">Debit Card</label>
+
+                            <div class="payment-details mt-3">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="card_number" id="card_number" class="form-control card-number" maxlength="19">
+                                    <label for="card_number">Card Number</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="exp_date" id="exp_date" class="form-control expiry" maxlength="5">
+                                            <label for="exp_date">Expiration Date</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <input type="password" name="cvv" id="cvv" class="form-control number-only" maxlength="3">
+                                            <label for="cvv">CVV/CVC</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="name_on_card" id="name_on_card" class="form-control">
+                                    <label for="name_on_card">Card Holder Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3 payment-option">
+                            <input type="radio" name="payment_mode" id="payment_mode5" class="form-check-input payment-radio" value="Credit Card">
+                            <label for="payment_mode5" class="form-check-label">Credit Card</label>
+
+                            <div class="payment-details mt-3">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="card_number" id="card_number" class="form-control card-number" maxlength="19">
+                                    <label for="card_number">Card Number</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="exp_date" id="exp_date" class="form-control expiry" maxlength="5">
+                                            <label for="exp_date">Expiration Date</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <input type="password" name="cvv" id="cvv" class="form-control number-only" maxlength="3">
+                                            <label for="cvv">CVV/CVC</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="name_on_card" id="name_on_card" class="form-control" maxlength="16">
+                                    <label for="name_on_card">Card Holder Name</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning btn-outline-dark px-4" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn ms-auto col-6 btn-warning btn-outline-dark px-4 fw-bold">CONFIRM HAND<i class="bi bi-wrench-adjustable-circle"></i>VER</button>
+                    </div>
+                    </div>
+                </div>
                 </div>
     
             </div>

@@ -42,6 +42,7 @@ const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 const cartCount = document.querySelector('#cart-count')
 
 
+
 cartPageItems.forEach( item => {
     updateDecBtn(item)
 });
@@ -394,3 +395,138 @@ decBtns.forEach(
         });
     }
 );
+
+const checkoutPage = document.querySelector('#checkout')
+
+if(checkoutPage){
+
+    const numberInputs = document.querySelectorAll('.number-only');
+    numberInputs.forEach(input => {
+        input.addEventListener('input', function () {
+            this.value = this.value.replace(/\D/g, '');            
+        });
+    });
+
+    const cartInputs = document.querySelectorAll('.card-number');
+    cartInputs.forEach(input =>{
+        input.addEventListener('input', function(){
+            let value = this.value;
+
+            value = value.replace(/\D/g, '');
+            value = value.substring(0, 16);
+            value = value.replace(/(\d{4})(?=\d)/g, '$1-');
+
+            this.value =value;
+        });
+    });
+
+    const expiryInputs = document.querySelectorAll('.expiry');
+    expiryInputs.forEach(input =>{
+        input.addEventListener('input', function(){
+            let value = this.value;
+
+            value = value.replace(/\D/g, '');
+            value = value.substring(0, 4);
+            value = value.replace(/(\d{2})(?=\d)/g, '$1/');
+
+            this.value =value;
+        });
+    });
+
+    const paymentRadios = document.querySelectorAll('.payment-radio');
+    const paymentDetails = document.querySelectorAll('.payment-details');
+
+    paymentRadios.forEach(radio => {
+        
+        radio.addEventListener('change', function () {
+            paymentDetails.forEach(detail => {
+                
+                detail.style.display = 'none';
+            });
+            
+            const currentOption = this.closest('.payment-option');
+            const currentDetails = currentOption.querySelector('.payment-details');
+            currentDetails.style.display = 'block'
+
+        });
+
+    });
+
+    const verifyBtn = document.getElementById('verify');
+    
+    if(verifyBtn){
+        verifyBtn.addEventListener('click', function () {
+            const emailInput = document.querySelector('#email');
+            
+            
+            const email = emailInput.value.trim();
+            if(!email){
+                alertify.error('Enter Your Email');
+                return;
+            }
+
+            fetch(
+                '/send-otp/',
+                {
+                    method: 'POST',
+
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken':csrfToken
+                    },
+
+                    body: new URLSearchParams({
+                        email: email
+                    })
+                }
+            )
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'OTP sent'){
+                    alertify.success('OTP sent to your email');
+                    const otpSection = document.querySelector('#otp-section');
+                    otpSection.classList.remove('d-none');
+                    verifyBtn.disabled = true;
+                }
+            });
+            
+
+        });
+    };
+
+    const verifyOtpBtn = document.querySelector('#verify-otp')
+    if (verifyOtpBtn){
+
+        verifyOtpBtn.addEventListener('click', function(){
+            const otpInput = document.querySelector('#otp')
+            const otp = otpInput.value.trim();
+            if(!otp){
+                alertify.error('Enter OTP')
+                return;
+            }
+            fetch('/verify-otp/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken':csrfToken
+                },
+
+                body: new URLSearchParams({
+                    otp: otp
+                })
+            }).then(response => response.json())
+            .then(data =>{
+                if(data.verified){
+                    alertify.success('Email Verified');
+                    otpInput.disabled = true;
+                    verifyOtpBtn.disabled = true;
+                    verifyBtn.textContent = 'Verified';
+                    verifyBtn.classList.remove('btn-warning');
+                    verifyBtn.classList.add('btn-success');
+                } else {
+                    alertify.error(data.status);
+                }
+            });
+        });
+    }
+}
