@@ -1,18 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
+
 import json, random
 from decimal import Decimal
 from django.db.models import Q
+from django.contrib import messages
+
 from .models import *
 from .forms import *
-from django.contrib import messages
+
+from django.conf import settings
+from .utils import generate_otp, verify_otp
+from django.core.mail import send_mail
 
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from django.core.mail import send_mail
 
 # SERVICE_VIEWS
 
@@ -229,16 +234,16 @@ def send_otp(request):
             'status': 'Email required'
         }, status = 400)
 
-    otp = random.randint(100000, 999999)
+    # otp = random.randint(100000, 999999)
+    otp = generate_otp()
 
     request.session['payment_otp'] = str(otp)
-    print(request.session)
     request.session['payment_email'] = email
 
     send_mail(
         'HANDOVER Email Verification',
         f'Your Verification OTP is {otp}',
-        None,
+        settings.EMAIL_HOST_USER,
         [email],
         fail_silently=False
     )
