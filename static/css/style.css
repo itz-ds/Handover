@@ -89,3 +89,15 @@
     margin-top: 10px;
     display: none;
 }
+.moving-bar{
+    scroll-behavior: smooth;
+}
+.moving-bar::-webkit-scrollbar{
+    display: none;
+}
+.left-btn, .right-btn{
+    z-index: 999;
+    height: 50px;
+    width: 50px;
+    top: 150px;
+}

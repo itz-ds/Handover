@@ -14,7 +14,7 @@
                     <span class="fs-5">{{profile.phone}}</span>
                     <span>{{profile.street1}}, {{profile.street2}}, {{profile.city}} - {{profile.zipcode}}</span>
                     <span>{{profile.state}}, {{profile.country}}.</span>
-                    <a href="#" class="btn btn-warning btn-outline-dark ms-auto mx-4">Change Address</a>
+                    <a href="#" class="btn btn-warning btn-outline-dark ms-auto mx-4 d-none">Change Address</a>
                 </div>
             </div>
         </div>
@@ -110,8 +110,9 @@
                             <label for="payment_mode2" class="form-check-label">UPI</label>
 
                             <div class="payment-details mt-3">
+                                <span class="py-2 text-center text-danger">Notice: We are only accepting '<span class="fw-bold">Cash on Hand</span>' at this time.</span>
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="upiid" id="upiid" class="form-control">
+                                    <input type="email" name="upiid" id="upiid" class="form-control" disabled>
                                     <label for="upiid">Verify your UPI ID</label>
                                 </div>
                             </div>
@@ -121,16 +122,17 @@
                             <label for="payment_mode3" class="form-check-label">Internet Banking</label>
 
                             <div class="payment-details mt-3">
+                                <span class="py-2 text-center text-danger">Notice: We are only accepting '<span class="fw-bold">Cash on Hand</span>' at this time.</span>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="bank_name" id="bank_name" class="form-control">
+                                    <input type="text" name="bank_name" id="bank_name" class="form-control" disabled>
                                     <label for="bank_name">Select your Bank</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="bank_username" id="bank_username" class="form-control">
+                                    <input type="text" name="bank_username" id="bank_username" class="form-control" disabled>
                                     <label for="bank_username">Enter your USER ID</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="password" name="bank_password" id="bank_password" class="form-control">
+                                    <input type="password" name="bank_password" id="bank_password" class="form-control" disabled>
                                     <label for="bank_password">Enter your Password</label>
                                 </div>
                             </div>
@@ -140,26 +142,27 @@
                             <label for="payment_mode4" class="form-check-label">Debit Card</label>
 
                             <div class="payment-details mt-3">
+                                <span class="py-2 text-center text-danger">Notice: We are only accepting '<span class="fw-bold">Cash on Hand</span>' at this time.</span>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="card_number" id="card_number" class="form-control card-number" maxlength="19">
+                                    <input type="text" name="card_number" id="card_number" class="form-control card-number" maxlength="19" disabled>
                                     <label for="card_number">Card Number</label>
                                 </div>
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="exp_date" id="exp_date" class="form-control expiry" maxlength="5">
+                                            <input type="text" name="exp_date" id="exp_date" class="form-control expiry" maxlength="5" disabled>
                                             <label for="exp_date">Expiration Date</label>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-floating mb-3">
-                                            <input type="password" name="cvv" id="cvv" class="form-control number-only" maxlength="3">
+                                            <input type="password" name="cvv" id="cvv" class="form-control number-only" maxlength="3" disabled>
                                             <label for="cvv">CVV/CVC</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="name_on_card" id="name_on_card" class="form-control">
+                                    <input type="text" name="name_on_card" id="name_on_card" class="form-control" disabled>
                                     <label for="name_on_card">Card Holder Name</label>
                                 </div>
                             </div>
@@ -169,26 +172,27 @@
                             <label for="payment_mode5" class="form-check-label">Credit Card</label>
 
                             <div class="payment-details mt-3">
+                                <span class="py-2 text-center text-danger">Notice: We are only accepting '<span class="fw-bold">Cash on Hand</span>' at this time.</span>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="card_number" id="card_number" class="form-control card-number" maxlength="19">
+                                    <input type="text" name="card_number" id="card_number" class="form-control card-number" maxlength="19" disabled>
                                     <label for="card_number">Card Number</label>
                                 </div>
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="exp_date" id="exp_date" class="form-control expiry" maxlength="5">
+                                            <input type="text" name="exp_date" id="exp_date" class="form-control expiry" maxlength="5" disabled>
                                             <label for="exp_date">Expiration Date</label>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-floating mb-3">
-                                            <input type="password" name="cvv" id="cvv" class="form-control number-only" maxlength="3">
+                                            <input type="password" name="cvv" id="cvv" class="form-control number-only" maxlength="3" disabled>
                                             <label for="cvv">CVV/CVC</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="name_on_card" id="name_on_card" class="form-control" maxlength="16">
+                                    <input type="text" name="name_on_card" id="name_on_card" class="form-control" maxlength="16" disabled>
                                     <label for="name_on_card">Card Holder Name</label>
                                 </div>
                             </div>

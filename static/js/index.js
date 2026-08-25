@@ -1,36 +1,3 @@
-// $('.add-cart').click(function(e){
-//     e.preventDefault();
-
-//     var service_id = $(this).closest('.service_data').find('.service_id').val();
-//     var token = $('input[name=csrfmiddlewaretoken]').val();
-//     console.log("Button clicked");
-//     console.log(service_id);
-//     $.ajax({
-//         method: 'POST',
-//         url: '/add-cart/',
-//         data: {
-//             'service_id': service_id,
-//             csrfmiddlewaretoken: token
-//         },
-//         success: function (response) {
-//             console.log(response)
-//             alertify.success(response.status)
-//         }
-//     })
-// })
-
-// const btn = document.getElementById('hello-btn')
-
-// btn.addEventListener('click', function(){
-//     fetch('/test-fetch/')
-//     .then(response => response.json())
-//     .then(data=>{
-//         alert(data.message);
-//     });
-// });
-
-
-
 const miniCartContainer = document.querySelector('#mini-cart-container');
 const cartContainer = document.querySelector('#cart-container');
 const cartPageItems = cartContainer ? cartContainer.querySelectorAll('.cart-item') : [];
@@ -529,4 +496,62 @@ if(checkoutPage){
             });
         });
     }
+}
+
+const homePage = document.getElementById('home')
+const servicePage = document.getElementById('service-page')
+const productPage = document.getElementById('product-page')
+
+const currentPage = homePage || servicePage || productPage;
+
+if(currentPage){
+    
+    contentBar = currentPage.querySelectorAll('.content-bar')
+
+   
+    contentBar.forEach(bar=>{
+        const movingBar = bar.querySelector('.moving-bar')
+        const leftBtn = bar.querySelector('.left-btn')
+        const rightBtn = bar.querySelector('.right-btn')
+
+
+        rightBtn.addEventListener('click', function(){
+            console.log('rightbtn clicked');
+            
+            const screenWidth = movingBar.clientWidth
+            
+            movingBar.scrollBy({
+                left: screenWidth
+            })
+        })
+        leftBtn.addEventListener('click', function(){
+            const screenWidth = movingBar.clientWidth
+            movingBar.scrollBy({
+                left: screenWidth * -1
+            })
+        })
+        const currentScroll = movingBar.scrollLeft;
+        const maxScroll = movingBar.scrollWidth - movingBar.clientWidth;
+        if(Math.ceil(currentScroll) >= maxScroll){
+            rightBtn.style.display = 'none';
+        }
+        movingBar.addEventListener('scroll', function(){
+            const currentScroll = movingBar.scrollLeft;
+            const maxScroll = movingBar.scrollWidth - movingBar.clientWidth;
+
+
+            if(currentScroll <= 0){
+                leftBtn.style.display = 'none';
+            }else{
+                leftBtn.style.display = 'block';
+            };
+
+            if(Math.ceil(currentScroll) >= maxScroll){
+                rightBtn.style.display = 'none';
+            }else{
+                rightBtn.style.display = 'block';
+            }
+            
+        })
+    })
 }

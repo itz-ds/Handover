@@ -5,7 +5,7 @@
 
 
 
-<div class="d-flex flex-column w-100 gap-5 pt-5">
+<div class="d-flex flex-column w-100 gap-5 pt-5" id="product-page">
     <h2 class="mb-3 fw-bold"><i class="{{category.icon}}"></i> {{category.name}}</h2>
     <div class="d-flex flex-column gap-3 mb-3">
 
@@ -55,18 +55,24 @@
     </div>
 
     <div class="mb-3">
-    <h2>Other Categories</h2>
-    <div class="py-3 d-flex align-items-center gap-3 home-services overflow-hidden">
-        {% for category in other_categories %}
-        <div class=" ">
-            <a href="{% url 'category' id=category.id %}" class=" category-panel rounded py-3">
-                <i class="display-6 d-block text-center {{category.icon}}"></i>
-                <p class="text-center text-nowrap">{{category.name}}</p>
-            </a>
+        <h2>Other Categories</h2>
+        <div class="position-relative py-3 w-100 content-bar">
+            <button class="btn left-btn btn-light btn-outline-dark position-absolute start-0 top-50 rounded-circle translate-middle ms-2" style="display: none;"><i class="bi bi-arrow-left"></i></button>
+            <button class="btn right-btn btn-light btn-outline-dark position-absolute start-100 top-50 rounded-circle translate-middle"><i class="bi bi-arrow-right"></i></button>
+            <div class="overflow-hidden">
+                <div class="py-3 d-flex align-items-center gap-3 home-services overflow-x-auto moving-bar">
+                    {% for category in other_categories %}
+                    <div class=" ">
+                        <a href="{% url 'category' id=category.id %}" class=" category-panel rounded py-3">
+                            <i class="display-6 d-block text-center {{category.icon}}"></i>
+                            <p class="text-center text-nowrap">{{category.name}}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-        {% endfor %}
     </div>
-</div>
 </div>
 
 {% endblock %}
